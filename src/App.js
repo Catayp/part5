@@ -74,7 +74,6 @@ const App = () => {
       }, 5000)
     }
   }
-
   const loginForm = () => (
     <>
       <SuccessError message={errorMessage} />
@@ -101,7 +100,6 @@ const App = () => {
       </form>
     </>
   )
-
   const blogForm = () => {
     return (
       <>

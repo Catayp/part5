@@ -3,4 +3,4 @@ const Blog = ({ blog }) => (
     {blog.title} - {blog.author}
   </li>
 )
-export default Blog
+export default  Blog
