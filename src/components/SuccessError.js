@@ -1,14 +1,14 @@
-const Success = ({ message }) => {
-  if(message === 'Please provide a valid email address and password' || message === "error, the blog can't insert"){
+const Success = ({ errorMessage, successMessage }) => {
+  if(errorMessage !== '' && errorMessage !== null){
     return(
       <div className='error'>
-        {message}
+        {errorMessage}
       </div>
     )
-  } else if (message ==='Sesion successful' || message ==='blog added') {
+  } else if (successMessage !== '' && successMessage !== null) {
     return(
       <div className='success'>
-        {message}
+        {successMessage}
       </div>
     )
   }

@@ -17,9 +17,7 @@ const App = () => {
   const blogRef = useRef()
 
   useEffect(() => {
-    blogService
-      .getAll()
-      .then(blogs => setBlogs( blogs ))
+    update()
   }, [])
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
@@ -44,12 +42,12 @@ const App = () => {
       setPassword('')
       setNewSuccess('Sesion successful')
       setTimeout(() => {
-        setNewSuccess('null')
+        setNewSuccess('')
       }, 3000)
     } catch (exception) {
       setErrorMessage('Please provide a valid email address and password')
       setTimeout(() => {
-        setErrorMessage('null')
+        setErrorMessage('')
       }, 5000)
       console.log(exception)
     }
@@ -58,6 +56,11 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogUser')
     setUser(null)
   }
+  const update = () => {
+    blogService
+      .getAll()
+      .then(blogs => setBlogs( blogs ))
+  }
   const addBlog = async (blogObject) => {
     blogRef.current.toggableVisibility()
     const newCreateBlog = await blogService.create(blogObject)
@@ -65,22 +68,57 @@ const App = () => {
     if(newCreateBlog) {
       setNewSuccess('blog added')
       setTimeout(() => {
-        setNewSuccess('null')
+        setNewSuccess('')
       }, 3000)
     } else {
       setErrorMessage("error, the blog can't insert")
       setTimeout(() => {
-        setErrorMessage('null')
+        setErrorMessage('')
       }, 5000)
     }
   }
+  const updateLike =  (id) => {
+    const objLike = blogs.find(blog => blog.id === id)
+    console.log(objLike)
+    const updLike={ ...objLike }
+    updLike.likes++
+    console.log(updLike)
+    blogService
+      .update(id, updLike)
+      .then(() => {
+        update()
+        setNewSuccess('+1 like')
+        setTimeout(() => {
+          setNewSuccess('')
+        },5000)
+      })
+      .catch(() => {
+        setErrorMessage('error al')
+        setTimeout(() => {
+          setErrorMessage('')
+        },5000)
+      })
+  }
+  const deleteBlog = (id) => {
+    blogService
+      .deleteBlog(id)
+      .then(response => {
+        setNewSuccess(response)
+        update()
+        setTimeout(() => {
+          setNewSuccess('')
+        },5000)
+      })
+      .catch((error => console.log(error)))
+  }
   const loginForm = () => (
     <>
-      <SuccessError message={errorMessage} />
+      <SuccessError errorMessage={errorMessage} successMessage={''} />
       <form onSubmit={handleLogin}>
         <div>
-          userName
+          username
           <input
+            id="userName"
             type="text"
             value={userName}
             name="UserName"
@@ -90,20 +128,21 @@ const App = () => {
         <div>
           password
           <input
+            id="password"
             type="password"
             value={password}
             name="Password"
             onChange={({ target }) => setPassword(target.value)}
           />
         </div>
-        <button type="submit">login</button>
+        <button id="login" type="submit">login</button>
       </form>
     </>
   )
   const blogForm = () => {
     return (
       <>
-        <SuccessError message={newSuccess} />
+        <SuccessError successMessage={newSuccess} errorMessage={''}/>
         <span><strong>{user.name} </strong></span>
         <button onClick={handleLogout}>logout</button><br/><br/>
         <Togglable buttonLabel='newBlog' ref={blogRef}>
@@ -111,7 +150,14 @@ const App = () => {
         </Togglable>
         <div>
           <ul>
-            {blogs.map((response) => <Blog blog={response} key={response.id} />)}
+            {blogs.map((response) =>
+              <Blog
+                blog={response}
+                key={response.id}
+                updateLike={()=>{updateLike(response.id)}}
+                deleteBlog={()=>{deleteBlog(response.id)}}
+              />
+            )}
           </ul>
         </div>
       </>
