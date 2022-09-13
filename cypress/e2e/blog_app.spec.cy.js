@@ -5,7 +5,7 @@ describe('Blog app', function() {
       userName: 'pepe',
       name: 'pepe',
       password: '1',
-      blogId: '62a9efe6fa8fc39eba1553c7'
+      blogId: '62ab9b24c98ebc89655df070'
     }
     cy.request('POST', 'http://localhost:3003/api/users', user)
     cy.visit('http://localhost:3000')
@@ -39,14 +39,14 @@ describe('Blog app', function() {
       cy.get('#login').click()
       cy.contains('Sesion successful')
     })
-    it('new blog', function() {
+    it.only('new blog', function() {
       cy.contains('New blog').click()
       cy.get('#title').type('pato')
       cy.get('#author').type('f')
       cy.get('#url').type('j')
-      // cy.get('#likes').type(3)
       cy.get('#saveBlog').click()
       cy.contains('blog added')
+      cy.get('#list').should('contain','pato')
     })
     it('update like', function() {
       cy.get('#like').click()

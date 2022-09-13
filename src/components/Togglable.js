@@ -9,6 +9,7 @@ const Togglable = React.forwardRef((props,ref) => {
   const toggableVisibility = () => {
     setFormVisible(!formVisible)
   }
+  console.log(props.btn)
   useImperativeHandle(ref, () => {
     return{
       toggableVisibility
@@ -17,7 +18,7 @@ const Togglable = React.forwardRef((props,ref) => {
   return (
     <>
       <div style={ hideWhenVisible }>
-        <button onClick={toggableVisibility}>New blog</button>
+        <button onClick={toggableVisibility}>{props.btn}</button>
       </div>
       <div style={showWhenVisible}>
         {props.children}

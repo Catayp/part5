@@ -6,7 +6,6 @@ import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './index.css'
-
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [userName, setUserName] = useState('')
@@ -145,11 +144,11 @@ const App = () => {
         <SuccessError successMessage={newSuccess} errorMessage={''}/>
         <span><strong>{user.name} </strong></span>
         <button onClick={handleLogout}>logout</button><br/><br/>
-        <Togglable buttonLabel='newBlog' ref={blogRef}>
+        <Togglable buttonLabel='newBlog' ref={blogRef} btn={'New blog'}>
           <BlogForm createBlog={addBlog} />
         </Togglable>
         <div>
-          <ul>
+          <ul id="list">
             {blogs.map((response) =>
               <Blog
                 blog={response}
